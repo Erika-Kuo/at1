@@ -1,10 +1,28 @@
-from django.core import serializers
-from django.shortcuts import render
-from .models import Question
-from django.contrib.auth.decorators import login_required
+from django.db import models
+from django.shortcuts import render, Http404
+from django.views.generic import ListView, DetailView
 
-@login_required
+from .models import Word
+
+class IndexView(ListView):
+    template_name = "hello/index.html"
+    model = Word
+
+class DetailView(DetailView):
+    template_name = "hello/detail.html"
+    model = Word
+
 def index(request):
-    questions = Question.objects.all()
-    questions_json = serializers.serialize('json', questions)
-    return render(request, 'eduprod/index.html', {'questions_json': questions_json})
+    words = Word.objects.all()
+    if not words:
+        raise Http404("No words found")
+    context = {"words": words}
+    return render(request, "hello/index.html", context)
+
+def detail(request, pk):
+    try:
+        word = Word.objects.get(pk=pk)
+    except Word.DoesNotExist:
+        raise Http404("Word not found")
+    context = {"word": word}
+    return render(request, "hello/detail.html", context)
