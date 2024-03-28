@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from .models import Question
+from .models import VocabularyWord
 
-# Register Question model with the default ModelAdmin
-admin.site.register(Question)
+# Register VocabularyWord model with the default ModelAdmin
+admin.site.register(VocabularyWord)
