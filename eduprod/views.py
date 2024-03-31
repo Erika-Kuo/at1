@@ -1,28 +1,34 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
-from .models import VocabularyWord
-import logging
+from django.core import serializers
+from django.shortcuts import render, redirect
+from .models import Flashcard, SavedFlashcards
+from django.contrib.auth.decorators import login_required
 
-logger = logging.getLogger(__name__)
+@login_required
+def flashcards_view(request):
+    flashcards = Flashcard.objects.order_by('?')[:5]
+    flashcards_json = serializers.serialize('json', flashcards)
+    return render(request, 'eduprod/flashcards.html', {'flashcards_json': flashcards_json})
 
-class IndexView(ListView):
-    template_name = "hello/index.html"
-    model = VocabularyWord
+@login_required
+def saved_flashcards_view(request, flashcard_id):
+    if flashcard_id:
+        flashcard = Flashcard.objects.get(id=flashcard_id)
+        saved_flashcards = SavedFlashcards(user=request.user, flashcard=flashcard)
+        saved_flashcards.save()
+    return redirect('eduprod:index')
 
-    def get(self, request, *args, **kwargs):
-        logger.info("Starting to render the index page...")
-        response = super().get(request, *args, **kwargs)
-        logger.info("Finished rendering the index page.")
-        return response
+@login_required
+def index(request):
+    flashcards = Flashcard.objects.order_by('?')[:5]
+    saved_flashcards = SavedFlashcards.objects.filter(user=request.user)
+    flashcard = flashcards.first()  # Assuming you want to pass the first flashcard in the context
 
-class DetailView(DetailView):
-    template_name = "hello/detail.html"
-    model = VocabularyWord
+    context = {
+        'flashcards': flashcards,
+        'saved_flashcards': saved_flashcards,
+        'flashcard': flashcard,  # Include the flashcard object in the context
+    }
 
-    def get(self, request, *args, **kwargs):
-        logger.info("Starting to render the detail page...")
-        response = super().get(request, *args, **kwargs)
-        logger.info("Finished rendering the detail page.")
-        return response
-    
-    
+    return render(request, 'eduprod/index.html', context)
+
+

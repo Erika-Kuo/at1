@@ -1,5 +1,20 @@
-{% extends "eduprod/layout.html" %}
-{% block body %}
-<div id="content" data-questions='{{ questions_json|safe }}'></div>
-<button id="revealBtn">Reveal Answer</button> 
-{% endblock %}
+<!-- Replace the existing content with the updated code -->
+<h1>Vocabulary</h1>
+
+<!-- Flashcards section -->
+<h2>Flashcards</h2>
+{% for card in flashcards %}
+    <p>{{ card.question }}</p>
+{% endfor %}
+
+<!-- Saved Flashcards section -->
+<h2>Saved Flashcards</h2>
+{% for saved_card in saved_flashcards %}
+    <p>{{ saved_card.question }}</p>
+{% empty %}
+    <p>No saved flashcards yet.</p>
+{% endfor %}
+
+<!-- Buttons section -->
+<a href="{% url 'eduprod:index' %}" class="btn btn-primary">Flashcards</a>
+<a href="{% url 'eduprod:saved_flashcards' flashcard_id=flashcard.id %}" class="btn btn-secondary">Saved Flashcards</a>

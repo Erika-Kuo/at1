@@ -1,0 +1,15 @@
+<h1>Flashcards</h1>
+
+{% if flashcards %}
+    <ul>
+        {% for flashcard in flashcards %}
+            <li>
+                <strong>{{ flashcard.question }}</strong>
+                <br>
+                Answer: {{ flashcard.answer }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No flashcards available.</p>
+{% endif %}
