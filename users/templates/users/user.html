@@ -1,6 +1,23 @@
 {% extends "users/layout.html" %}
+
 {% block body %}
     <h1>Welcome, {{ request.user.first_name }}</h1>
     <p>Username: {{ request.user.username }}</p>
-    <a href="{% url 'eduprod:index' %}">Take the Quiz</a>
+    <a href="{% url 'eduprod:index' %}">Flashcards</a>
+    <a href="{% url 'eduprod:saved_flashcards' %}">Saved Flashcards</a>
+
+    {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% load static %}
+{% block head %}
+    <title>Flashcards</title>
+    <link href="{% static 'users/styles.css' %}" rel="stylesheet">
+    <script src="{% static 'eduprod/quiz.js' %}" defer></script>
 {% endblock %}

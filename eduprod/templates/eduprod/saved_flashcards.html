@@ -1,0 +1,14 @@
+{% extends "users/layout.html" %}
+
+{% block body %}
+    <h1>Saved Flashcards</h1>
+    {% if saved_flashcards %}
+        <ul>
+        {% for flashcard in saved_flashcards %}
+            <li>{{ flashcard }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No saved flashcards yet.</p>
+    {% endif %}
+{% endblock %}

@@ -1,7 +1,5 @@
 from django import forms
 from .models import Flashcard
 
-class QuestionForm(forms.ModelForm):
-    class Meta:
-        model = Flashcard
-        fields = ['question_text', 'answer_text']
+class FlashcardSaveForm(forms.Form):
+    flashcard = forms.ModelChoiceField(queryset=Flashcard.objects.all(), empty_label=None)
