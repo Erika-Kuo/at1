@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
 from eduprod.views import index, flashcards_view, saved_flashcards_view
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    path('login/', auth_views.LoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path('users/', include(('users.urls', 'users'), namespace='users')),
     path('eduprod/', include(('eduprod.urls', 'eduprod'), namespace='eduprod')),

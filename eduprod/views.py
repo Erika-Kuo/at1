@@ -4,12 +4,16 @@ from .models import Flashcard, SavedFlashcards
 from django.contrib.auth.decorators import login_required
 from .forms import FlashcardSaveForm
 
+from .models import Flashcard
+
 @login_required
 def flashcards_view(request):
-    flashcards = Flashcard.objects.order_by('?')[:5]
-    flashcards_json = serializers.serialize('json', flashcards)
-    return render(request, 'eduprod/flashcards.html', {'flashcards_json': flashcards_json})
+    print("Flashcards view function reached!")  # Add this print statement
     
+    flashcards = Flashcard.objects.all()  # Retrieve all flashcards
+    
+    return render(request, 'eduprod/index.html', {'flashcards': flashcards})
+
 @login_required
 def saved_flashcards_view(request):
     if request.method == 'POST':
