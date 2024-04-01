@@ -15,10 +15,10 @@
         <div>
             <button id="revealBtn">Reveal Answer</button> 
             <button id="next-card-btn">Next Card</button>
-            <form id="save-form" method="post">
+            <form id="save-form" method="post" action="{% url 'eduprod:saved_flashcards' %}">
                 {% csrf_token %}
                 <input type="hidden" name="flashcard_id" value="{{ flashcards.0.id }}">
-                <button type="submit">Save Flashcard</button>
+                <button id="save-flashcard-btn" type="button">Save Flashcard</button>
             </form>
         </div>
 
@@ -30,7 +30,9 @@
             </ul>
         {% endif %}
 
-        <script src="{% static 'js/flashcards.js' %}"></script>
+        <div id="saved-flashcards-list">
+            <!-- Saved Flashcards will be displayed here -->
+        </div>
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -39,6 +41,38 @@
 
                 revealBtn.addEventListener("click", function() {
                     answer.style.display = 'block';
+                });
+
+                const saveFlashcardBtn = document.getElementById('save-flashcard-btn');
+                const saveForm = document.getElementById('save-form');
+                
+                saveFlashcardBtn.addEventListener("click", function() {
+                    // Get the flashcard ID from the form
+                    const flashcardId = saveForm.querySelector('input[name="flashcard_id"]').value;
+                    
+                    // Make an AJAX request to save the flashcard
+                    fetch('{% url 'eduprod:saved_flashcards' %}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ flashcard_id: flashcardId }),
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Flashcard saved successfully
+                            alert('Flashcard saved!');
+                            // You can update the UI or take further actions here
+                        } else {
+                            // Error occurred while saving flashcard
+                            alert('Failed to save flashcard.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while saving the flashcard.');
+                    });
                 });
             });
         </script>

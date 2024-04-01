@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import FlashcardSaveForm
 from .models import Flashcard, SavedFlashcards
+from django.http import JsonResponse
 
 @login_required
 def flashcards_view(request):
@@ -61,4 +62,7 @@ def next_flashcard(request):
         'id': flashcard.id,
     }
 
-    return render(request, 'eduprod/index.html', context)
+    if request.is_ajax():  # Check if the request is AJAX
+        return JsonResponse({'context': context})
+    else:
+        return render(request, 'eduprod/index.html', context)
