@@ -1,58 +1,40 @@
 {% extends "users/layout.html" %}
 
+{% load static %}
+
 {% block body %}
     <h1>Welcome, {{ user.username }}</h1>
 
     <h2>Flashcards</h2>
-    <div id="flashcard-container">
+
+    {% if flashcards %}
         <div class="flashcard">
             <p class="question">{{ flashcards.0.front }}</p>
             <p class="answer" style="display: none;">{{ flashcards.0.back }}</p>
         </div>
-    </div>
 
-    <div>
-        <button id="reveal-btn" onclick="revealAnswer()">Reveal Answer</button>
-        <button id="next-card-btn" onclick="showNextCard()">Next Card</button>
-        <form id="save-form" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="flashcard_id" value="{{ flashcards.0.id }}">
-            <button type="submit">Save Flashcard</button>
-        </form>
-    </div>
+        <div>
+            <button id="reveal-btn" onclick="revealAnswer()">Reveal Answer</button>
+            <button id="next-card-btn" onclick="showNextCard()">Next Card</button>
+            <form id="save-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="flashcard_id" value="{{ flashcards.0.id }}">
+                <button type="submit">Save Flashcard</button>
+            </form>
+        </div>
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <script src="{% static 'js/flashcards.js' %}"></script>
+
+    {% else %}
+        <p>No flashcards found.</p>
     {% endif %}
 
-    <script>
-        const flashcards = {{ flashcards|safe }};
-        let currentCardIndex = 0;
-
-        function revealAnswer() {
-            const answer = document.querySelector('.flashcard .answer');
-            answer.style.display = 'block';
-        }
-
-        function showNextCard() {
-            currentCardIndex++;
-            if (currentCardIndex >= flashcards.length) {
-                currentCardIndex = 0; // Loop back to the first card
-            }
-            const currentFlashcard = flashcards[currentCardIndex];
-            const flashcardContainer = document.getElementById('flashcard-container');
-            flashcardContainer.innerHTML = `
-                <div class="flashcard">
-                    <p class="question">${currentFlashcard.front}</p>
-                    <p class="answer" style="display: none;">${currentFlashcard.back}</p>
-                </div>
-            `;
-            // Update the flashcard ID in the form
-            document.querySelector('#save-form input[name="flashcard_id"]').value = currentFlashcard.id;
-        }
-    </script>
 {% endblock %}
