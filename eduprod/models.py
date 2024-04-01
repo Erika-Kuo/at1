@@ -7,7 +7,7 @@ class Flashcard(models.Model):
 
     def __str__(self):
         return self.front
-    
+
 class SavedFlashcards(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     flashcard = models.ForeignKey(Flashcard, on_delete=models.CASCADE)

@@ -1,6 +1,9 @@
 {% extends "users/layout.html" %}
+{% load static %}
 
 {% block body %}
+    Debug: {{ saved_flashcards }}
+
     <h1>Saved Flashcards</h1>
     {% if saved_flashcards %}
         <ul>

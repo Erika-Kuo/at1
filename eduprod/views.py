@@ -17,20 +17,23 @@ def saved_flashcards_view(request):
     if request.method == 'POST':
         form = FlashcardSaveForm(request.POST)
         if form.is_valid():
-            flashcard_id = form.cleaned_data['flashcard_id']
+            flashcard_id = form.cleaned_data['flashcard']
             flashcard = Flashcard.objects.get(id=flashcard_id)
             saved_flashcard = SavedFlashcards.objects.create(user=request.user, flashcard=flashcard)
             saved_flashcard.save()
-            return redirect('eduprod:saved_flashcards')  # Redirect to the saved flashcards page
+            return redirect('eduprod:saved_flashcards.html')
     else:
         form = FlashcardSaveForm()
 
+    flashcards = Flashcard.objects.order_by('?')[:5]
     saved_flashcards = SavedFlashcards.objects.filter(user=request.user)
+
     context = {
+        'flashcards': flashcards,
         'saved_flashcards': saved_flashcards,
         'form': form,
     }
-    return render(request, 'eduprod/saved_flashcards.html', context)
+    return render(request, 'eduprod/index.html', context)
 
 @login_required
 def index(request):
@@ -62,7 +65,8 @@ def next_flashcard(request):
         'id': flashcard.id,
     }
 
-    if request.is_ajax():  # Check if the request is AJAX
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         return JsonResponse({'context': context})
     else:
+        # If it's not an AJAX request, render a regular HTTP response
         return render(request, 'eduprod/index.html', context)
