@@ -20,7 +20,7 @@ def saved_flashcards_view(request):
             flashcard = Flashcard.objects.get(id=flashcard_id)
             saved_flashcard = SavedFlashcards.objects.create(user=request.user, flashcard=flashcard)
             saved_flashcard.save()
-            return redirect('eduprod:saved_flashcards')
+            return redirect('eduprod:saved_flashcards')  # Redirect to the saved flashcards page
     else:
         form = FlashcardSaveForm()
 
@@ -29,7 +29,6 @@ def saved_flashcards_view(request):
         'saved_flashcards': saved_flashcards,
         'form': form,
     }
-
     return render(request, 'eduprod/saved_flashcards.html', context)
 
 @login_required

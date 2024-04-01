@@ -1,16 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Saved Flashcards</title>
-</head>
-<body>
+{% extends "users/layout.html" %}
+
+{% block body %}
     <h1>Saved Flashcards</h1>
-    <ul>
-        {% for flashcard in saved_flashcards %}
-            <li>{{ flashcard.question }} - {{ flashcard.answer }}</li>
-        {% empty %}
-            <li>No saved flashcards found.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+    {% if saved_flashcards %}
+        <ul>
+            {% for saved_flashcard in saved_flashcards %}
+                <li>
+                    <p>Front: {{ saved_flashcard.flashcard.front }}</p>
+                    <p>Back: {{ saved_flashcard.flashcard.back }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No saved flashcards yet.</p>
+    {% endif %}
+{% endblock %}

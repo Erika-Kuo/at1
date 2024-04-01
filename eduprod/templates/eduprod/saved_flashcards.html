@@ -4,10 +4,10 @@
     <h1>Saved Flashcards</h1>
     {% if saved_flashcards %}
         <ul>
-            {% for flashcard in saved_flashcards %}
+            {% for saved_flashcard in saved_flashcards %}
                 <li>
-                    <p>Front: {{ flashcard.flashcard.front }}</p>
-                    <p>Back: {{ flashcard.flashcard.back }}</p>
+                    <p>Front: {{ saved_flashcard.flashcard.front }}</p>
+                    <p>Back: {{ saved_flashcard.flashcard.back }}</p>
                 </li>
             {% endfor %}
         </ul>
