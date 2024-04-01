@@ -24,13 +24,10 @@ def saved_flashcards_view(request):
     else:
         form = FlashcardSaveForm()
 
-    flashcards = Flashcard.objects.all()  # Retrieve all flashcards
     saved_flashcards = SavedFlashcards.objects.filter(user=request.user)
-
     context = {
         'saved_flashcards': saved_flashcards,
         'form': form,
-        'flashcards': flashcards,  # Pass flashcards to the template
     }
 
     return render(request, 'eduprod/saved_flashcards.html', context)

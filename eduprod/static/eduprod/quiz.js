@@ -1,31 +1,31 @@
 document.addEventListener("DOMContentLoaded", function() {
-    let currentQuestionIndex = 0;
-    const questions = JSON.parse(document.getElementById('content').getAttribute('data-questions'));
-    const content = document.getElementById('content');
-    const btn = document.getElementById('revealBtn');
+    let currentFlashcardIndex = 0;
+    const flashcards = JSON.parse(document.getElementById('flashcard-container').getAttribute('data-flashcards'));
+    const flashcardContainer = document.getElementById('flashcard-container');
+    const revealBtn = document.getElementById('revealBtn');
 
-    function displayQuestion() {
-        if (currentQuestionIndex < questions.length) {
-            const question = questions[currentQuestionIndex].fields.question_text;
-            const answer = questions[currentQuestionIndex].fields.answer_text;
-            content.innerHTML = `<div class='question'>Question: ${question}</div><div class='answer' style='display: none;'>Answer: ${answer}</div>`;
-            btn.textContent = "Reveal Answer";
+    function displayFlashcard() {
+        if (currentFlashcardIndex < flashcards.length) {
+            const front = flashcards[currentFlashcardIndex].fields.front;
+            const back = flashcards[currentFlashcardIndex].fields.back;
+            flashcardContainer.innerHTML = `<div class='flashcard'><p class='front'>Front: ${front}</p><p class='back' style='display: none;'>Back: ${back}</p></div>`;
+            revealBtn.textContent = "Reveal Answer";
         } else {
-            content.innerHTML = "No more questions.";
-            btn.style.display = "none";
+            flashcardContainer.innerHTML = "No more flashcards.";
+            revealBtn.style.display = "none";
         }
     }
 
-    displayQuestion();
+    displayFlashcard();
 
-    btn.addEventListener("click", function() {
-        const answerElement = content.querySelector('.answer');
-        if (btn.textContent === "Reveal Answer") {
-            answerElement.style.display = "block";
-            btn.textContent = "Next Question";
+    revealBtn.addEventListener("click", function() {
+        const backElement = flashcardContainer.querySelector('.back');
+        if (revealBtn.textContent === "Reveal Answer") {
+            backElement.style.display = "block";
+            revealBtn.textContent = "Next Flashcard";
         } else {
-            currentQuestionIndex++;
-            displayQuestion();
+            currentFlashcardIndex++;
+            displayFlashcard();
         }
     });
 });

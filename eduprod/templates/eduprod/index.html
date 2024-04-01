@@ -1,5 +1,4 @@
 {% extends "users/layout.html" %}
-
 {% load static %}
 
 {% block body %}
@@ -14,8 +13,8 @@
         </div>
 
         <div>
-            <button id="reveal-btn" onclick="revealAnswer()">Reveal Answer</button>
-            <button id="next-card-btn" onclick="showNextCard()">Next Card</button>
+            <button id="revealBtn">Reveal Answer</button> 
+            <button id="next-card-btn">Next Card</button>
             <form id="save-form" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="flashcard_id" value="{{ flashcards.0.id }}">
@@ -33,6 +32,16 @@
 
         <script src="{% static 'js/flashcards.js' %}"></script>
 
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const revealBtn = document.getElementById('revealBtn');
+                const answer = document.querySelector('.flashcard .answer');
+
+                revealBtn.addEventListener("click", function() {
+                    answer.style.display = 'block';
+                });
+            });
+        </script>
     {% else %}
         <p>No flashcards found.</p>
     {% endif %}

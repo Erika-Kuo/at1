@@ -1,4 +1,4 @@
-const flashcards = {{ flashcards|safe }};
+const flashcard = {{ flashcards|safe }};
 let currentCardIndex = 0;
 
 function revealAnswer() {
