@@ -20,6 +20,22 @@
                 <input type="hidden" name="flashcard_id" value="{{ flashcards.0.id }}">
                 <button id="save-flashcard-btn" type="button">Save Flashcard</button>
             </form>
+            <script>
+                function saveFlashcard() {
+                    // Get flashcard data
+                    var question = document.querySelector('#flashcard .question').textContent;
+                    var answer = document.querySelector('#flashcard .answer').textContent;
+                
+                    // Send flashcard data to backend (you can use AJAX here)
+                    var flashcardData = {
+                        question: question,
+                        answer: answer
+                    };
+                
+                    // For demo purposes, just log the data to console
+                    console.log(flashcardData);
+                }
+                </script>
         </div>
 
         {% if messages %}
