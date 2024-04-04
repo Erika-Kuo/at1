@@ -6,34 +6,44 @@ from django.http import JsonResponse
 
 @login_required
 def flashcards_view(request):
-    print("Flashcards view function reached!")  # Add this print statement
+    flashcards = Flashcard.objects.all()
+    current_index = int(request.GET.get('current_index', 0))
 
-    flashcards = Flashcard.objects.all()  # Retrieve all flashcards
+    if current_index + 1 >= len(flashcards):
+        current_index = 0
+    else:
+        current_index += 1
 
-    return render(request, 'eduprod/index.html', {'flashcards': flashcards})
+    flashcard = flashcards[current_index]
+
+    context = {
+        'flashcard': flashcard,
+        'current_index': current_index
+    }
+
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        return JsonResponse({'context': context})
+    else:
+        return render(request, 'eduprod/index.html', context)
 
 @login_required
-def saved_flashcards_view(request):
+def saved_flashcards(request):
     if request.method == 'POST':
         form = FlashcardSaveForm(request.POST)
+
         if form.is_valid():
             flashcard_id = form.cleaned_data['flashcard']
             flashcard = Flashcard.objects.get(id=flashcard_id)
             saved_flashcard = SavedFlashcards.objects.create(user=request.user, flashcard=flashcard)
             saved_flashcard.save()
-            return redirect('eduprod:saved_flashcards.html')
-    else:
-        form = FlashcardSaveForm()
 
-    flashcards = Flashcard.objects.order_by('?')[:5]
-    saved_flashcards = SavedFlashcards.objects.filter(user=request.user)
+            return JsonResponse({
+                'saved': True
+            })
 
-    context = {
-        'flashcards': flashcards,
-        'saved_flashcards': saved_flashcards,
-        'form': form,
-    }
-    return render(request, 'eduprod/index.html', context)
+    return JsonResponse({
+        'saved': False
+    })
 
 @login_required
 def index(request):
@@ -46,27 +56,3 @@ def index(request):
     }
 
     return render(request, 'eduprod/index.html', context)
-
-@login_required
-def next_flashcard(request):
-    flashcards = Flashcard.objects.all()
-    current_index = int(request.GET.get('current_index', 0))
-
-    if current_index + 1 >= len(flashcards):
-        current_index = 0
-    else:
-        current_index += 1
-
-    flashcard = flashcards[current_index]
-
-    context = {
-        'front': flashcard.front,
-        'back': flashcard.back,
-        'id': flashcard.id,
-    }
-
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return JsonResponse({'context': context})
-    else:
-        # If it's not an AJAX request, render a regular HTTP response
-        return render(request, 'eduprod/index.html', context)

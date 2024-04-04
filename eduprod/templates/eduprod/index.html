@@ -15,7 +15,7 @@
         <div>
             <button id="revealBtn">Reveal Answer</button> 
             <button id="next-card-btn">Next Card</button>
-            <form id="save-form" method="post" action="{% url 'eduprod:saved_flashcards' %}">
+            <form id="save-form" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="flashcard_id" value="{{ flashcards.0.id }}">
                 <button id="save-flashcard-btn" type="button">Save Flashcard</button>

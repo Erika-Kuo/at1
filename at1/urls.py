@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
-from eduprod.views import index, flashcards_view, saved_flashcards_view
+from eduprod.views import index, flashcards_view, saved_flashcards
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -12,5 +12,5 @@ urlpatterns = [
     path('accounts/login/', include('users.urls')),
     path('', csrf_exempt(index), name='index'),
     path('flashcards/', flashcards_view, name='flashcards'),
-    path('saved-flashcards/', saved_flashcards_view, name='saved_flashcards'),
+    path('saved-flashcards/', saved_flashcards, name='saved_flashcards'),
 ]
